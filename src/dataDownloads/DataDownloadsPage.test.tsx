@@ -9,7 +9,6 @@ import { renderWithQueryClient } from '@src/testUtils';
 import messages from './messages';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
-jest.mock('./data/apiHook');
 jest.mock('@src/components/PageNotFound', () => ({
   __esModule: true,
   default: () => <div>Page Not Found</div>,
@@ -20,6 +19,11 @@ jest.mock('@openedx/frontend-base', () => ({
 }));
 jest.mock('@src/data/api', () => ({
   getApiBaseUrl: jest.fn(() => 'http://lms.example.com'),
+}));
+jest.mock('./data/apiHook');
+jest.mock('@src/data/apiHook', () => ({
+  ...jest.requireActual('@src/data/apiHook'),
+  useCourseInfo: () => ({ data: { certificatesEnabled: false } }),
 }));
 
 const mockUseGeneratedReports = useGeneratedReports as jest.MockedFunction<typeof useGeneratedReports>;
